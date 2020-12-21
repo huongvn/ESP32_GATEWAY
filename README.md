@@ -8,4 +8,4 @@ Gateway BaseOn ESP32
 * RTOS doc: https://laubugs.wordpress.com/2019/06/09/su-dung-freertos-choi-luon-phan-1/
 
 # Dependence
-* SP32 ARDUINO:https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+* ESP32 ARDUINO:https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
