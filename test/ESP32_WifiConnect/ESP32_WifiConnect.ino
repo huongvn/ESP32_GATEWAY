@@ -68,13 +68,12 @@ void statusLed(int ton,int toff){
 // the setup function
 void setup() {
   Serial.begin(115200);
-  WiFi.mode(WIFI_STA);
   u8g2.begin();
 
   xTaskCreatePinnedToCore(TaskWiFi, "TaskWiFi", 3072, NULL, 1, NULL, ARDUINO_RUNNING_CORE);
-  xTaskCreatePinnedToCore(TaskDisplay, "TaskDisplay", 2048, NULL, 2, NULL, ARDUINO_RUNNING_CORE);
-  xTaskCreatePinnedToCore(TaskStatusLed, "TaskStatusLed", 1024, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
-  Serial.println("Setup done");
+  xTaskCreatePinnedToCore(TaskDisplay, "TaskDisplay", 1024, NULL, 2, NULL, ARDUINO_RUNNING_CORE);
+  xTaskCreatePinnedToCore(TaskStatusLed, "TaskStatusLed", 512, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
+  
 }
 // loop loop 
 void loop()
@@ -94,27 +93,30 @@ void TaskStatusLed(void *pvParameters){
 void TaskWiFi(void *pvParameters){
     (void) pvParameters;
     for (;;) {
-      int n = WiFi.scanNetworks();
-      Serial.println("scan done");
-      if (n == 0) {
-        Serial.println("no networks found");
-      } else {
-        Serial.print(n);
-        Serial.println(" networks found");
-        for (int i = 0; i < n; ++i) {
-            // Print SSID and RSSI for each network found
-            Serial.print(i + 1);
-            Serial.print(": ");
-            Serial.print(WiFi.SSID(i));
-            Serial.print(" (");
-            Serial.print(WiFi.RSSI(i));
-            Serial.print(")");
-            Serial.println((WiFi.encryptionType(i) == WIFI_AUTH_OPEN)?" ":"*");
-            delay(10);
-        }
-      }
-      Serial.println("");
-      vTaskDelay(5000);
+        if (WiFi.status() == WL_CONNECTED){
+             vTaskDelay(WIFI_CHECKTIME);
+             Serial.print("Still connect to ");
+             Serial.println(WIFI_NETWORK);
+             continue;
+          }
+        Serial.print("Try to connect: ");
+        Serial.println(WIFI_NETWORK);
+        WiFi.begin(WIFI_NETWORK, WIFI_PASSWORD);
+        unsigned long startAttemptTime = millis();
+        while (WiFi.status() != WL_CONNECTED && (millis() - startAttemptTime) < WIFI_TIMEOUT_MS) {
+            vTaskDelay(1000);
+            Serial.println("Disconnected from wifi AP");
+          }
+        if (WiFi.status() != WL_CONNECTED){
+             vTaskDelay(WIFI_RECOVER_TIME_MS);
+             Serial.println("Check again network ");
+             Serial.println(WIFI_NETWORK);
+             continue;
+          }
+        Serial.println("WiFi connected");
+        Serial.println("IP address: ");
+        Serial.println(WiFi.localIP());
+        vTaskDelay(1);
         }
   }
 void TaskDisplay(void *pvParameters){ // Run Diskplay Task
@@ -122,9 +124,13 @@ void TaskDisplay(void *pvParameters){ // Run Diskplay Task
     char uxHighWaterMark;
     for(;;) {
      u8g2_prepare();
-      char *string_list = "aab\n";
-      u8g2.userInterfaceSelectionList("NETWORK FOUND", 1, string_list);
-      vTaskDelay(1);
+     u8g2.firstPage();
+     
+      do {
+      //u8g2_ascii_1();
+      mainScreen();
+     } while ( u8g2.nextPage() );
+      vTaskDelay(20);
       }
     
   }
