@@ -1,8 +1,6 @@
-#if CONFIG_FREERTOS_UNICORE
-#define ARDUINO_RUNNING_CORE 0
-#else
+
 #define ARDUINO_RUNNING_CORE 1
-#endif
+#define ARDUINO_ZERO_CORE 0
 
 #include <Arduino.h>
 #include <U8g2lib.h>
@@ -70,9 +68,9 @@ void setup() {
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
   u8g2.begin();
-
-  xTaskCreatePinnedToCore(TaskWiFi, "TaskWiFi", 3072, NULL, 1, NULL, ARDUINO_RUNNING_CORE);
-  xTaskCreatePinnedToCore(TaskDisplay, "TaskDisplay", 2048, NULL, 2, NULL, ARDUINO_RUNNING_CORE);
+  u8g2_prepare();
+  xTaskCreatePinnedToCore(TaskWiFi, "TaskWiFi", 4096, NULL, 1, NULL, ARDUINO_ZERO_CORE);
+  xTaskCreatePinnedToCore(TaskDisplay, "TaskDisplay", 4096, NULL, 2, NULL, ARDUINO_RUNNING_CORE);
   xTaskCreatePinnedToCore(TaskStatusLed, "TaskStatusLed", 1024, NULL, 3, NULL, ARDUINO_RUNNING_CORE);
   Serial.println("Setup done");
 }
@@ -88,6 +86,7 @@ void TaskStatusLed(void *pvParameters){
     pinMode(LED_BUILTIN,OUTPUT);
     for (;;) {
       statusLed(05,5000);
+      Serial.println("DEBUG: STATUS LED TASK");
       vTaskDelay(1);
       }
   }
@@ -119,12 +118,11 @@ void TaskWiFi(void *pvParameters){
   }
 void TaskDisplay(void *pvParameters){ // Run Diskplay Task
     (void) pvParameters;
-    char uxHighWaterMark;
     for(;;) {
-     u8g2_prepare();
       char *string_list = "aab\n";
       u8g2.userInterfaceSelectionList("NETWORK FOUND", 1, string_list);
-      vTaskDelay(1);
+      vTaskDelay(20);
+      Serial.println("DEBUG: EXIT TASK DISPLAY");
+      vTaskSuspend( NULL );
       }
-    
   }
