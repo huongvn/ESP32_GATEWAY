@@ -1,0 +1,29 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "defines": [
+                "ARDUINO=10800",
+                "USBCON"
+            ],
+            "includePath": [
+                "${workspaceRoot}",
+                "C:\\Users\\huongvn\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.4\\**",
+                "C:\\Program Files (x86)\\Arduino\\libraries\\**",
+                "C:\\Users\\huongvn\\Documents\\Arduino\\libraries\\**",
+                "C:\\Users\\huongvn\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\**",
+                "C:\\Program Files (x86)\\Arduino\\hardware\\tools\\**",
+                "C:\\Program Files (x86)\\Arduino\\libraries\\**",
+                "C:\\Users\\huongvn\\Documents\\Arduino\\hardware\\tools\\**",
+                "C:\\Users\\huongvn\\Documents\\Arduino\\libraries\\**",
+                "C:/Users/huongvn/AppData/Local/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/config"
+            ],
+            "forcedInclude": [],
+            "intelliSenseMode": "clang-x64",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.28.29333/bin/Hostx64/x64/cl.exe"
+        }
+    ],
+    "version": 4
+}
