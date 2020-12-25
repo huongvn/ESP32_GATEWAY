@@ -95,7 +95,7 @@ void TaskWiFi(void *pvParameters){
 void TaskDisplay(void *pvParameters){ // Run Diskplay Task
     (void) pvParameters;
     for(;;) {
-      test16x16();
+      menuHeader();
       vTaskDelay(20);
       }
   }
