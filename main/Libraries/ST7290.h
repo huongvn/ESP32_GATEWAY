@@ -32,7 +32,7 @@ static const int spiClk = 100000; // 0.2 MHz
 #define LCD_LINE2       0x88
 #define LCD_LINE3       0x98
 
-#define 
+
 //uninitalised pointers to SPI objects
 SPIClass * vspi = NULL;
 void sendCmd(byte b) 
