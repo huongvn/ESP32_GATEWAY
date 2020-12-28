@@ -14,7 +14,10 @@
                 "C:\\Users\\huongvn\\Documents\\Arduino\\**",
                 "C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino",
                 "C:\\Users\\huongvn\\Documents\\Arduino\\libraries\\U8g2\\src\\**",
-                "C:/Users/huongvn/AppData/Local/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/esp_event"
+                "C:/Users/huongvn/AppData/Local/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/esp_event",
+                "C:\\Users\\NGUYENVANHUONG\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.4\\**",
+                "C:\\Users\\NGUYENVANHUONG\\Documents\\Arduino\\libraries\\**",
+                "C:\\Users\\NGUYENVANHUONG\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\**"
             ],
             "forcedInclude": [],
             "intelliSenseMode": "msvc-x86",

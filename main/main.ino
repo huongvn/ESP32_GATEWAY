@@ -2,9 +2,7 @@
 #define ARDUINO_ONE_CORE 1  //APP_CODE
 #define ARDUINO_ZERO_CORE 0 //PRO_CODE
 
-#include <Arduino.h>
-#include "WiFi.h"
-#include "Driver//ST7290.h"
+#include "main.h"
 
 #ifndef LED_BUILTIN
 #define LED_BUILTIN 2

@@ -1,32 +1,4 @@
-#ifndef _ST7290_H_
-#define _ST7290_H_
-
-/* The ESP32 has four SPi buses, however as of right now only two of
- * them are available to use, HSPI and VSPI. Simply using the SPI API 
- * as illustrated in Arduino examples will use VSPI, leaving HSPI unused.
- * 
- * However if we simply intialise two instance of the SPI class for both
- * of these buses both can be used. However when just using these the Arduino
- * way only will actually be outputting at a time.
- */
-#include <Arduino.h>
-#include <SPI.h>
-
-static const int spiClk = 100000; // 0.2 MHz
-
-#define LCD_CS          5
-#define LCD_CLS         0x01
-#define LCD_HOME        0x02
-#define LCD_ADDRINC     0x06
-#define LCD_DISPLAYON   0x0C
-#define LCD_CURSORON    0x0E
-#define LCD_CURSORBLINK 0x0F
-#define LCD_BASIC       0x30
-#define LCD_EXTEND      0x34
-#define LCD_LINE0       0x80
-#define LCD_LINE1       0x90
-#define LCD_LINE2       0x88
-#define LCD_LINE3       0x98
+#include "ST7290.h"
 
 uint8_t startRow, startCol, endRow, endCol; // coordinates of the dirty rectangle
 uint8_t numRows = 64;
@@ -108,26 +80,25 @@ void LCD_SendString(int row, int col, char* string){
             col |= 0x80;
             break;
     }
-    SendCmd(col);
+    sendCmd(col);
     while (*string)
     	{
-    		SendData(*string++);
+    		sendData(*string++);
     	}
 }
 
 void LCD_GraphicMode (int enable){   // 1-enable, 0-disable{
 	if (enable == 1){
-		SendCmd(0x30);  // 8 bit mode
+		sendCmd(0x30);  // 8 bit mode
 		vTaskDelay (1);
-		SendCmd(0x34);  // switch to Extended instructions
+		sendCmd(0x34);  // switch to Extended instructions
 		vTaskDelay (1);
-		SendCmd(0x36);  // enable graphics
+		sendCmd(0x36);  // enable graphics
 		vTaskDelay (1);
 		Graphic_Check = 1;  // update the variable
 	}
-
 	else if (enable == 0){
-		SendCmd(0x30);  // 8 bit mode
+		sendCmd(0x30);  // 8 bit mode
 		vTaskDelay (1);
 		Graphic_Check = 0;  // update the variable
 	}
@@ -136,7 +107,6 @@ void LCD_DrawBitmap(const unsigned char* graphic)
 {
 	
 	uint8_t x, y;
-	
 	uint16_t Index=0;
 	uint8_t Temp,Db;
 	
@@ -146,13 +116,13 @@ void LCD_DrawBitmap(const unsigned char* graphic)
 		{
 			if(y<32)//Up
 			{
-				SendCmd(0x80 | y);										//Y(0-31)
-				SendCmd(0x80 | x);										//X(0-8)
+				sendCmd(0x80 | y);//Y(0-31)
+				sendCmd(0x80 | x);//X(0-8)
 			}
 			else
 			{
-				SendCmd(0x80 | y-32);//Y(0-31)
-				SendCmd(0x88 | x);//X(0-8)
+				sendCmd(0x80 | y-32);//Y(0-31)
+				sendCmd(0x88 | x);//X(0-8)
 			}
 			
 			Index=((y/8)*128)+(x*16);
@@ -181,7 +151,3 @@ void LCD_DrawBitmap(const unsigned char* graphic)
 		}
 	}		
 }
-
-#endif 
-
-
