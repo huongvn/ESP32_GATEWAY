@@ -32,7 +32,7 @@ static const int spiClk = 100000; // 0.2 MHz
 #define LCD_LINE2       0x88
 #define LCD_LINE3       0x98
 
-
+#define 
 //uninitalised pointers to SPI objects
 SPIClass * vspi = NULL;
 void sendCmd(byte b) 
@@ -90,58 +90,8 @@ void ST7290setup() {
   digitalWrite(LCD_CS, LOW);
   LCD_init();
 }
-char buf[20];
 
-void test8x16()
-{
-  int del = 2000;
-  sendCmd(LCD_BASIC);
-  unsigned int i,j,c=0;
-  for(i=0;i<0x80;i++) {
-    c++;
-    if(c==16) sendCmd(LCD_LINE2);
-    else if(c==32) sendCmd(LCD_LINE3);
-    else if(c>=48 || i==0) {
-      if(c>=48) vTaskDelay(del);
-      snprintf(buf,20,"%02X..%02X",i,i+47);
-      sendCmd(LCD_CLS); vTaskDelay(2);
-      for(j=0;j<strlen(buf);j++) sendData(buf[j]);
-      c=0;
-      sendCmd(LCD_LINE1);
-    }
-    sendData(i==0?' ':i);
-  }
-  vTaskDelay(del);
-}
-void test16x16()
-{
-  int del = 200;
-  sendCmd(LCD_BASIC);
-  unsigned int i,j,c=0;
-  int st=0xa140;
-  for(i=st;i<0xffff;i++) {
-    c++;
-    if(c==8) sendCmd(LCD_LINE2);
-    else if(c==16) sendCmd(LCD_LINE3);
-    else if(c>=24 || i==st) {
-      if(c>=24) vTaskDelay(i<0xac00?800:del);
-      snprintf(buf,20,"%04X..%04X",i,i+23);
-      sendCmd(LCD_CLS); vTaskDelay(2);
-      for(j=0;j<strlen(buf);j++) sendData(buf[j]);
-      c=0;
-      sendCmd(LCD_LINE1);
-    }
-    sendData(i>>8);
-    sendData(i&0xff);
-  }
-  vTaskDelay(del);
-}
-void menuHeader(){
-    int del = 200;
-    sendCmd(LCD_BASIC);
-    sendCmd(LCD_LINE0);
-    sendData(0x11);
-    vTaskDelay(del);
-}
+
+
 
 
