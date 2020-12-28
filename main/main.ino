@@ -25,7 +25,12 @@ void statusLed(int ton,int toff){
 void setup() {
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
-  LCD_setup();
+  GLCD_setup();
+
+  pinMode(19, INPUT_PULLUP);
+  pinMode(21, INPUT_PULLUP);
+  pinMode(22, INPUT_PULLUP);
+
   xTaskCreatePinnedToCore(TaskWiFi, "TaskWiFi", 4096, NULL, 1, NULL, ARDUINO_ONE_CORE);
   xTaskCreatePinnedToCore(TaskDisplay, "TaskDisplay", 4096, NULL, 2, NULL, ARDUINO_ONE_CORE);
   xTaskCreatePinnedToCore(TaskStatusLed, "TaskStatusLed", 1024, NULL, 3, NULL, ARDUINO_ONE_CORE);
@@ -75,10 +80,22 @@ void TaskWiFi(void *pvParameters){
   }
 void TaskDisplay(void *pvParameters){ // Run Diskplay Task
     (void) pvParameters;
+    GLCD_GraphicMode(true);
+    GLCD_Clear();
+    char str;
     for(;;) {
+      if (digitalRead(22) == 1) {
+          str = '1';
+      }else
+      {
+          str = '0';
+      }
       
-
-
+      DrawRectangle(0,0,127,10);
+      GLCD_Font_Print(6,0,"HOME");
+      GLCD_Font_Print(0,3, &str);
+      Serial.print(&str);
+      GLCD_Update();
       vTaskDelay(20);
       }
   }
